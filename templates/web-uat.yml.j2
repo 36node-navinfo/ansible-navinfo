@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: web
+  name: web-uat
   labels:
-    app: web
+    app: web-uat
 spec:
   type: ClusterIP
   ports:
@@ -12,19 +12,19 @@ spec:
       port: 80
       targetPort: 80
   selector:
-    app: web
+    app: web-uat
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web
+  name: web-uat
   labels:
-    app: web
+    app: web-uat
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web
+      app: web-uat
   minReadySeconds: 10
   strategy:
     type: RollingUpdate
@@ -34,40 +34,28 @@ spec:
   template:
     metadata:
       labels:
-        app: web
+        app: web-uat
     spec:
       restartPolicy: Always
       containers:
-        - name: web
-          image: "{{ web_image }}"
+        - name: web-uat
+          image: "{{ web_uat_image }}"
           env:
             - name: DEPLOY_TIME
-              value: "{{ web_time }}"
+              value: "{{ web_uat_time }}"
             - name: RAZZLE_ZPOSTER_CONTENT_BASE
-              value: "{{ web_zposter_content_path }}"
+              value: "{{ web_uat_zposter_content_path }}"
             - name: RAZZLE_LANG
-              value: "{{ web_lang }}"
+              value: "{{ web_uat_lang }}"
             - name: RAZZLE_TITLE
-              value: "{{ web_title }}"
+              value: "{{ web_uat_title }}"
             - name: RAZZLE_KEYWORDS
-              value: "{{ web_keywords }}"
+              value: "{{ web_uat_keywords }}"
             - name: RAZZLE_DESCRIPTION
-              value: "{{ web_description }}"
+              value: "{{ web_uat_description }}"
           ports:
             - name: http
               containerPort: 80
-          readinessProbe:
-            httpGet:
-              path: "{{ web_health_path }}"
-              port: 80
-            initialDelaySeconds: 5
-            periodSeconds: 60
-          livenessProbe:
-            httpGet:
-              path: "{{ web_health_path }}"
-              port: 80
-            initialDelaySeconds: 5
-            periodSeconds: 60
           resources:
             limits:
               cpu: "1000m"

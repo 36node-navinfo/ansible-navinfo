@@ -13,10 +13,11 @@
     namespace: "{{ navinfo_namespace }}"
     template: "{{ item }}"
   with_items:
-    - jiefa.yml.j2
+    # - jiefa.yml.j2
     - journal.yml.j2
     - web.yml.j2
     - web-en.yml.j2
+    - web-uat.yml.j2
     - ingress.yml.j2
   tags:
     - navinfo

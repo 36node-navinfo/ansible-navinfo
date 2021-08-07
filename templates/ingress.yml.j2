@@ -6,38 +6,66 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: "{{ cert_issuer }}"
+    traefik.ingress.kubernetes.io/redirect-regex: "^https://www.(.*)"
+    traefik.ingress.kubernetes.io/redirect-replacement: "https://$1"
 spec:
   rules:
-    - host: "{{ other_domain }}"
+    - host: "{{ domain }}"
       http:
         paths:
           - backend:
               serviceName: web-en
               servicePort: 80
             path: /en
-    - host: "{{ other_domain }}"
+    - host: "{{ domain }}"
       http:
         paths:
           - backend:
               serviceName: web
               servicePort: 80
             path: /
-    - host: "navinfo-journal.{{ domain }}"
+    - host: "www.{{ domain }}"
+      http:
+        paths:
+          - backend:
+              serviceName: web-en
+              servicePort: 80
+            path: /en
+    - host: "www.{{ domain }}"
+      http:
+        paths:
+          - backend:
+              serviceName: web
+              servicePort: 80
+            path: /
+    # - host: "www-uat.{{ domain }}"
+    #   http:
+    #     paths:
+    #       - backend:
+    #           serviceName: web-uat
+    #           servicePort: 80
+    #         path: /
+    - host: "navinfo-uat.{{ journal_domain_name }}"
+      http:
+        paths:
+          - backend:
+              serviceName: web-uat
+              servicePort: 80
+            path: /
+    - host: "{{ journal_domain }}"
       http:
         paths:
           - backend:
               serviceName: journal
               servicePort: 80
             path: /
-    - host: "www.jiefa.{{ domain }}"
-      http:
-        paths:
-          - backend:
-              serviceName: jiefa
-              servicePort: 80
-            path: /
-  # tls:
-  #   - hosts:
-  #       - "{{ domain }}"
-  #       - "*.{{ domain }}"
-  #     secretName: "{{ domain }}"
+  tls:
+    - hosts:
+        - "{{ domain }}"
+        - "www.{{ domain }}"
+        # - "www-uat.{{ domain }}"
+      secretName: "{{ domain }}"
+    - hosts:
+        - "{{ journal_domain }}"
+        - "navinfo-uat.{{ journal_domain_name }}"
+      secretName: "{{ journal_domain_name }}"
