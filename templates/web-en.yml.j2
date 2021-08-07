@@ -1,0 +1,81 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-en
+  labels:
+    app: web-en
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: web-en
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-en
+  labels:
+    app: web-en
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-en
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: web-en
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: web-en
+          image: "{{ web_en_image }}"
+          env:
+            - name: DEPLOY_TIME
+              value: "{{ web_en_time }}"
+            - name: RAZZLE_ZPOSTER_CONTENT_BASE
+              value: "{{ web_en_zposter_content_path }}"
+            - name: RAZZLE_LIFE_EVENT_BASE
+              value: "{{ web_en_event_path }}"
+            - name: RAZZLE_LANG
+              value: "{{ web_en_lang }}"
+            - name: RAZZLE_BASENAME
+              value: "{{ web_en_basename }}"
+            - name: RAZZLE_TITLE
+              value: "{{ web_en_title }}"
+            - name: RAZZLE_KEYWORDS
+              value: "{{ web_en_keywords }}"
+            - name: RAZZLE_DESCRIPTION
+              value: "{{ web_en_description }}"
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: "{{ web_en_health_path }}"
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: "{{ web_en_health_path }}"
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 60
+          resources:
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+            requests:
+              cpu: "10m"
+              memory: "32Mi"

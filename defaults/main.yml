@@ -1,0 +1,58 @@
+---
+# defaults file for navinfo
+namespace: navinfo
+state: present
+
+navinfo_state: "{{ state }}"
+navinfo_namespace: "{{ namespace }}"
+
+ingress_name: navinfo
+domain: navinfo.36node.com
+
+mongodb_connection: mongodb://root:it_is_a_secret@mongodb
+
+jiefa_version: latest
+jiefa_image: "registry.cn-hongkong.aliyuncs.com/36node/jiefa-www:{{ jiefa_version }}"
+jiefa_time: 20210804120000
+jiefa_zposter_content_path: /content/v0
+jiefa_lang: zh
+jiefa_title: "合肥杰发科技有限公司"
+jiefa_keywords: "navinfo,地图,导航,3D导航,AR导航,桩家,充电桩,自动驾驶,自动驾驶地图,高精度地图,高清地图,高精地图,高精度定位,汽车电子芯片,汽车半导体,车载芯片,位置大数据,车机,车联网,智能网联,商用车,卡车,语音"
+jiefa_description: "中国领先的数字地图,自动驾驶,汽车电子芯片,位置大数据和乘用车,商用车车联网解决方案提供商,以位置服务和智能汽车科技赋能行业,共创出行美好明天."
+jiefa_health_path: /
+
+journal_version: latest
+journal_image: "registry.cn-hongkong.aliyuncs.com/36node/navinfo-journal-light:{{ journal_version }}"
+journal_time: 20210804120000
+journal_space_id: 58b29fceca0a5700104c7e91
+journal_title: "东西南北"
+journal_auth_provider: 5cc26a541331c40012eaae3c
+journal_auth_path: https://stargate.36node.com/api/auth/v0
+journal_zposter_content_path: https://api.zposter.36node.com/content/v0
+journal_ns: /navinfo
+journal_event_path: https://api.life.36node.com/event/v0
+journal_token: eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJ1c2VyIjp7InJvbGVzIjpbIkFETUlOIiwiVVNFUiJdfX0.XA1kE_UdbOsU0rfmG3g1y3SpJ5aFVzPGFBHihVXv58sNatweqLHPEUAwhqobgKgmAbaKa3dlYrXEpHESHZ7AJgQYCfSeVxtsKyoQmcq9OYA0iFcH5oCWQgYqfeWJPOroMlMdNQax5kG-GkuaFbIiwiw-9j_ACS8CSPO9Oq2dQCA
+journal_health_path: /
+
+web_version: latest
+web_image: "registry.cn-beijing.aliyuncs.com/36node/navinfo-web:{{ web_version }}"
+web_time: 20210804120000
+web_zposter_content_path: https://api.36node.com/content/v0
+web_event_path: https://api.36node.com/event/v0
+web_lang: zh
+web_title: "四维图新-赋能智慧出行助力美好生活"
+web_keywords: "navinfo,地图,导航,3D导航,AR导航,桩家,充电桩,自动驾驶,自动驾驶地图,高精度地图,高清地图,高精地图,高精度定位,汽车电子芯片,汽车半导体,车载芯片,位置大数据,车机,车联网,智能网联,商用车,卡车,语音"
+web_description: "中国领先的数字地图,自动驾驶,汽车电子芯片,位置大数据和乘用车,商用车车联网解决方案提供商,致力于成为用户信赖的智能出行科技公司."
+web_health_path: /
+
+web_en_version: latest
+web_en_image: "registry.cn-beijing.aliyuncs.com/36node/navinfo-web:{{ web_en_version }}"
+web_en_time: 20210804120000
+web_en_zposter_content_path: https://api.36node.com/content/v0
+web_en_event_path: https://api.36node.com/event/v0
+web_en_lang: en
+web_en_basename: en
+web_en_title: "NavInfo, Empowering Smart Mobility for a Better Life"
+web_en_keywords: "navinfo,map,navigation,charging pile,automated driving,autonomous driving,driverless car,selfdriving car,HD Map,HD GNSS,automotive semiconductor,chips,location big data,telematics,smart networking,commercial vehicle,truck,CVS,connected vehicle,sixents,autoai,cennavi,autochips"
+web_en_description: "Navinfo, China's leading location service and smart mobility solution provider with core businesses in digital map, autonomous driving, connected vehicle service, automotive semiconductors and location big data."
+web_en_health_path: /
