@@ -6,6 +6,8 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: traefik
     cert-manager.io/cluster-issuer: "{{ cert_issuer }}"
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
     traefik.ingress.kubernetes.io/redirect-regex: "^https://www.(.*)"
     traefik.ingress.kubernetes.io/redirect-replacement: "https://$1"
 spec:
