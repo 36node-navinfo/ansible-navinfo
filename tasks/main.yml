@@ -17,7 +17,7 @@
     - journal.yml.j2
     - web.yml.j2
     - web-en.yml.j2
-    - web-uat.yml.j2
+    # - web-uat.yml.j2
     - ingress.yml.j2
   tags:
     - navinfo

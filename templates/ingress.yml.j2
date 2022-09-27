@@ -1,73 +1,87 @@
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+---
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ ingress_name }}"
   annotations:
-    kubernetes.io/ingress.class: traefik
+    kubernetes.io/ingress.class: "{{ ingress_class }}"
     cert-manager.io/cluster-issuer: "{{ cert_issuer }}"
-    ingress.kubernetes.io/force-ssl-redirect: "true"
-    ingress.kubernetes.io/ssl-redirect: "true"
-    traefik.ingress.kubernetes.io/redirect-regex: "^https://www.(.*)"
-    traefik.ingress.kubernetes.io/redirect-replacement: "https://$1"
+    # Forces HTTPS
+    traefik.ingress.kubernetes.io/router.middlewares: "{{ namespace }}-redirect-https@kubernetescrd"
+    # Forces a Permanent (301) redirect
+    ingress.kubernetes.io/redirect-permanent: "true"
+    # Specifies a regex for which URLs to redirect
+    ingress.kubernetes.io/redirect-regex: "^https://www.{{ domain }}/?(.*)"
+    # Here is where redirected URLs will end up
+    #   Notice the $3, which is the third capture
+    #   group from the above regex
+    ingress.kubernetes.io/redirect-replacement: "https://{{ domain }}/$1"
 spec:
   rules:
     - host: "{{ domain }}"
       http:
         paths:
-          - backend:
-              serviceName: web-en
-              servicePort: 80
-            path: /en
+          - path: /en
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: web-en
+                port: 
+                  number: 80
     - host: "{{ domain }}"
       http:
         paths:
-          - backend:
-              serviceName: web
-              servicePort: 80
-            path: /
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: web
+                port: 
+                  number: 80
     - host: "www.{{ domain }}"
       http:
         paths:
-          - backend:
-              serviceName: web-en
-              servicePort: 80
-            path: /en
+          - path: /en
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: web-en
+                port: 
+                  number: 80
     - host: "www.{{ domain }}"
       http:
         paths:
-          - backend:
-              serviceName: web
-              servicePort: 80
-            path: /
-    # - host: "www-uat.{{ domain }}"
-    #   http:
-    #     paths:
-    #       - backend:
-    #           serviceName: web-uat
-    #           servicePort: 80
-    #         path: /
-    - host: "navinfo-uat.{{ journal_domain_name }}"
-      http:
-        paths:
-          - backend:
-              serviceName: web-uat
-              servicePort: 80
-            path: /
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: web
+                port: 
+                  number: 80
     - host: "{{ journal_domain }}"
       http:
         paths:
-          - backend:
-              serviceName: journal
-              servicePort: 80
-            path: /
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: journal
+                port: 
+                  number: 80
   tls:
     - hosts:
         - "{{ domain }}"
         - "www.{{ domain }}"
-        # - "www-uat.{{ domain }}"
       secretName: "{{ domain }}"
     - hosts:
         - "{{ journal_domain }}"
-        - "navinfo-uat.{{ journal_domain_name }}"
       secretName: "{{ journal_domain_name }}"
